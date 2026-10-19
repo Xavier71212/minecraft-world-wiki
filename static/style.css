@@ -1,0 +1,146 @@
+/* Minecraft World Wiki — 百科風設計系統（tokens 與設計系統 tokens.json 一致） */
+:root {
+  --page: #F6F6F6; --surface: #FFFFFF; --surface-alt: #F8F9FA;
+  --ink: #202122; --ink-muted: #54595D;
+  --border: #A2A9B1; --hairline: #C8CCD1; --divider: #EAECF0;
+  --link: #3366CC; --link-hover: #1F4A99; --link-unpublished: #BA0000; --focus: #3366CC;
+  --portal-intro-border: #A7D7F9; --head-featured: #EAF3FF; --head-didyouknow: #EFF8EA;
+  --cat-region: #D6E4F5; --cat-transport: #D4EDE4; --cat-org: #F3E6C6; --cat-religion: #E6D8EF; --cat-history: #EADFD2;
+  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-sans: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #101418; --surface: #1A1D21; --surface-alt: #22262B;
+    --ink: #EAECF0; --ink-muted: #A2A9B1;
+    --border: #5C6168; --hairline: #3A3F45; --divider: #2C3036;
+    --link: #88A3E8; --link-hover: #B3C5F2; --link-unpublished: #F08A8A; --focus: #88A3E8;
+    --portal-intro-border: #2F5577; --head-featured: #1E2D40; --head-didyouknow: #1F3022;
+    --cat-region: #1E3048; --cat-transport: #1B3A31; --cat-org: #3B3220; --cat-religion: #33263D; --cat-history: #3A2E24;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--font-sans); font-size: 15px; line-height: 1.8; }
+a { color: var(--link); text-decoration: none; }
+a:hover { color: var(--link-hover); text-decoration: underline; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+img { max-width: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 8px; background: var(--surface); padding: 4px 8px; z-index: 10; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.unpub { color: var(--link-unpublished); }
+.muted, .empty { color: var(--ink-muted); }
+
+/* 頂欄 */
+.topbar { background: var(--surface); border-bottom: 1px solid var(--hairline); }
+.topbar-in { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
+.brand:hover { text-decoration: none; color: var(--ink); }
+.mark { width: 44px; height: 44px; border: 2px solid var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-weight: 700; font-size: 20px; flex: none; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-family: var(--font-serif); font-size: 22px; font-weight: 700; }
+.brand-sub { font-size: 12px; color: var(--ink-muted); }
+.search { flex: 1 1 280px; max-width: 520px; display: flex; position: relative; }
+.search input { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--border); border-right: none; border-radius: 2px 0 0 2px; font: inherit; font-size: 14px; background: var(--surface); color: var(--ink); }
+.search button { height: 40px; padding: 0 18px; border: 1px solid var(--border); background: var(--surface-alt); color: var(--ink); border-radius: 0 2px 2px 0; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.suggest { position: absolute; top: 42px; left: 0; right: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); border: 1px solid var(--border); z-index: 20; max-height: 360px; overflow: auto; }
+.suggest li a { display: block; padding: 6px 12px; color: var(--ink); line-height: 1.4; }
+.suggest li a:hover, .suggest li a.active { background: var(--surface-alt); text-decoration: none; }
+.suggest small { display: block; color: var(--ink-muted); font-size: 12px; }
+.toplinks { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px; }
+
+/* 版面 */
+.layout { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding-block: 24px 48px; }
+.side { flex: 1 1 180px; max-width: 200px; display: flex; flex-direction: column; gap: 20px; font-size: 14px; line-height: 1.6; }
+.side-group { display: flex; flex-direction: column; gap: 6px; }
+.side-label { font-size: 12px; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 4px; }
+.toc-l3 { padding-left: 12px; }
+.main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.foot { border-top: 1px solid var(--hairline); background: var(--surface); color: var(--ink-muted); font-size: 13px; }
+.foot .wrap { padding-block: 16px; }
+
+/* 首頁 */
+.welcome { background: var(--surface); border: 1px solid var(--portal-intro-border); padding: 24px 28px; text-align: center; }
+.welcome h1 { margin: 0; font-family: var(--font-serif); font-size: 30px; line-height: 1.3; text-wrap: balance; }
+.welcome p { margin: 4px 0 0; color: var(--ink-muted); }
+.welcome .count { font-size: 13px; }
+.box { background: var(--surface); border: 1px solid var(--hairline); margin: 0; min-width: 0; }
+.box-h { margin: 0; padding: 8px 16px; background: var(--surface-alt); border-bottom: 1px solid var(--hairline); font-family: var(--font-serif); font-size: 17px; font-weight: 700; }
+.head-featured { background: var(--head-featured); }
+.head-dyk { background: var(--head-didyouknow); }
+.box-b { padding: 16px; }
+.mapfig { padding: 12px; }
+.mapfig img { display: block; width: 100%; height: auto; }
+.mapfig figcaption { font-size: 13px; color: var(--ink-muted); margin-top: 8px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.feat { display: flex; gap: 16px; align-items: flex-start; }
+.feat p { margin: 0; }
+.feat-img { width: 60px; height: auto; border: 1px solid var(--hairline); image-rendering: pixelated; flex: none; }
+.dyk { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.regions { width: 100%; border-collapse: collapse; font-size: 14px; }
+.regions th { text-align: left; padding: 10px 16px; width: 150px; background: var(--surface-alt); vertical-align: top; }
+.regions td { padding: 10px 16px; }
+.regions tr + tr { border-top: 1px solid var(--divider); }
+.plain { color: var(--ink); }
+.recent { margin: 0; padding: 12px 16px; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.recent li { display: flex; justify-content: space-between; gap: 12px; }
+.recent span { color: var(--ink-muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+article .recent { padding: 0; }
+
+/* 條目 */
+.article { background: var(--surface); border: 1px solid var(--hairline); padding: 24px 32px 40px; min-width: 0; }
+.crumbs { font-size: 13px; color: var(--ink-muted); }
+.title { margin: 4px 0 16px; padding-bottom: 6px; border-bottom: 1px solid var(--border); font-family: var(--font-serif); font-size: 32px; line-height: 1.3; text-wrap: balance; }
+.article-body::after { content: ""; display: block; clear: both; }
+.article h2 { margin: 28px 0 10px; padding-bottom: 4px; border-bottom: 1px solid var(--border); font-family: var(--font-serif); font-size: 22px; line-height: 1.4; }
+.article h3 { margin: 20px 0 6px; font-size: 17px; line-height: 1.4; }
+.article p { margin: 0 0 12px; }
+.article ul { margin: 0 0 12px; padding-left: 22px; }
+.cols { columns: 2; column-gap: 32px; }
+.hatnote { font-style: italic; color: var(--ink-muted); }
+.catbar { clear: both; margin-top: 28px; padding: 8px 12px; border: 1px solid var(--hairline); background: var(--surface-alt); font-size: 13px; }
+.updated { font-size: 12px; color: var(--ink-muted); margin-top: 12px; }
+.fig { margin: 12px 0 16px; display: inline-block; max-width: 100%; border: 1px solid var(--hairline); background: var(--surface-alt); padding: 6px; }
+.fig img { display: block; max-height: 480px; width: auto; }
+.fig figcaption { font-size: 13px; color: var(--ink-muted); padding-top: 4px; }
+.tablewrap { overflow-x: auto; margin: 0 0 12px; }
+.wikitable { border-collapse: collapse; font-size: 14px; background: var(--surface-alt); }
+.wikitable td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: top; }
+
+/* 資訊框 */
+.infobox { float: right; clear: right; width: 300px; margin: 0 0 16px 24px; border: 1px solid var(--border); background: var(--surface-alt); border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+.infobox caption { caption-side: top; padding: 8px; border: 1px solid var(--border); border-bottom: none; font-family: var(--font-serif); font-weight: 700; font-size: 17px; background: var(--cat-history); }
+.infobox caption span { display: block; font-family: var(--font-sans); font-weight: 400; font-size: 13px; }
+.infobox caption.cat-region { background: var(--cat-region); }
+.infobox caption.cat-transport { background: var(--cat-transport); }
+.infobox caption.cat-org { background: var(--cat-org); }
+.infobox caption.cat-religion { background: var(--cat-religion); }
+.infobox caption.cat-history { background: var(--cat-history); }
+.infobox th { text-align: left; padding: 6px 10px; width: 96px; vertical-align: top; }
+.infobox td { padding: 6px 10px; }
+.infobox tr + tr { border-top: 1px solid var(--divider); }
+.infobox .ib-sub { text-align: center; background: var(--surface); }
+.ib-img { text-align: center; }
+.ib-figs { display: flex; justify-content: center; align-items: flex-end; gap: 20px; flex-wrap: wrap; padding: 6px 0; }
+.ib-figs figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+/* 旗幟依原檔方向顯示，不旋轉；預設為直式 */
+.ib-figs img { max-width: 120px; max-height: 200px; width: auto; height: auto; border: 1px solid var(--hairline); image-rendering: pixelated; }
+.ib-figs figcaption { font-size: 12px; color: var(--ink-muted); }
+
+/* 搜尋結果 */
+.results { list-style: none; padding: 0 !important; display: flex; flex-direction: column; gap: 14px; }
+.results small { display: block; color: var(--ink-muted); font-size: 12px; }
+
+@media (max-width: 760px) {
+  .side { max-width: none; order: 2; }
+  .main { order: 1; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .article { padding: 16px; }
+  .infobox { float: none; width: 100%; margin: 0 0 16px; }
+  .cols { columns: 1; }
+  .regions th { width: 110px; }
+}
