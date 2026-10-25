@@ -6,7 +6,7 @@
 
 用法：
   python tools/docx_i18n.py extract 中文.docx > 原文.json
-  python tools/docx_i18n.py apply   中文.docx 譯文.json 英文.docx
+  python tools/docx_i18n.py apply   中文.docx 譯文.json 譯文.docx [語言代碼，預設 en；托拉語用 art-x-tora]
 
 JSON 是一個陣列，每個元素 {"i": 段落編號, "t": 標記文字}；"i": "title" 為標題。
 標記：
@@ -16,7 +16,7 @@ JSON 是一個陣列，每個元素 {"i": 段落編號, "t": 標記文字}；"i"
   ==文字==             黃色螢光筆（尚無條目的專有名詞）
   {{RRGGBB|文字}}      指定字色
 只含圖片的段落不會出現在 JSON 裡，套回時原封不動。
-英文檔的「摘要」欄位會記下中文原檔的 SHA-1，建站時用來判斷翻譯是否需要更新。
+譯文檔的「摘要」欄位會記下中文原檔的 SHA-1，建站時用來判斷翻譯是否需要更新。
 """
 import copy
 import hashlib
@@ -218,7 +218,7 @@ def parse(markup):
     return toks
 
 
-def apply(src, trans, out, title=None):
+def apply(src, trans, out, title=None, lang="en"):
     doc = Document(src)
     part = doc.part
     # 原文中每個連結目標對應的 rId 與 rPr（保留顏色）
@@ -285,7 +285,7 @@ def apply(src, trans, out, title=None):
         for x in trans:
             if x["i"] == "title":
                 cp.title = re.sub(r"(\*\*|//|==)", "", x["t"])
-    cp.language = "en"
+    cp.language = lang
     doc.save(out)
 
 
@@ -294,6 +294,7 @@ if __name__ == "__main__":
     if cmd == "extract":
         print(json.dumps(extract(sys.argv[2]), ensure_ascii=False, indent=1))
     elif cmd == "apply":
-        apply(sys.argv[2], json.load(open(sys.argv[3], encoding="utf-8")), sys.argv[4])
+        apply(sys.argv[2], json.load(open(sys.argv[3], encoding="utf-8")), sys.argv[4],
+              lang=sys.argv[5] if len(sys.argv) > 5 else "en")
     else:
         print(__doc__)

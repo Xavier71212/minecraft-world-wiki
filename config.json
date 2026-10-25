@@ -5,7 +5,11 @@
   "tagline": "以 Minecraft 世界為基礎、與現實世界平行的世界觀百科",
   "map_caption": "世界地圖與勢力範圍（2026 年 8 月 30 日版）。",
   "base_path": "minecraft-world-wiki",
-  "featured": ["卡諾共和國", "紅花之吻", "伏流鎮"],
+  "featured": [
+    "卡諾共和國",
+    "紅花之吻",
+    "伏流鎮"
+  ],
   "did_you_know": [
     "[[神武鐵路]]是路線圖上車站最多、跨越國家最多的路線？",
     "[[探索者線]]是唯一通往銀白大陸的鐵路？",
@@ -15,7 +19,7 @@
   "about": [
     "Minecraft World Wiki 是一部以 Minecraft 世界為基礎、與現實世界平行的世界觀百科，記錄這個世界的國家、城鎮、交通、組織、宗教與歷史。",
     "條目由世界觀作者撰寫並審核後發布。藍色連結為已發布的條目；紅色文字表示該條目已經寫好、正在審核中，尚未公開。",
-    "本站提供繁體中文與英文兩種語言，可用每一頁右上角的「語言」選單切換。英文版由中文條目翻譯而來，尚未翻譯的條目在語言選單中會顯示為灰色。"
+    "本站提供繁體中文、英文與托拉語（Ŧőřǎ）三種語言，可用每一頁右上角的「語言」選單切換。英文版與托拉語版由中文條目翻譯而來，尚未翻譯的條目在語言選單中會顯示為灰色。"
   ],
   "footer": "Minecraft World Wiki・平行世界的自由百科",
   "en": {
@@ -31,7 +35,7 @@
     "about": [
       "Minecraft World Wiki is an encyclopedia of a world built in Minecraft that runs parallel to our own. It records the world's countries, towns, transport, organizations, religions and history.",
       "Articles are written and reviewed by the world's author before they are published. Blue links lead to published articles; red text marks an article that has been written but is still under review.",
-      "The wiki is available in Traditional Chinese and English. Use the Language menu at the top right of every page to switch. English articles are translated from the Chinese originals; links marked “zh” lead to articles that are not yet available in English."
+      "The wiki is available in Traditional Chinese, English and Tora (Ŧőřǎ). Use the Language menu at the top right of every page to switch. English and Tora articles are translated from the Chinese originals; links marked “zh” lead to articles that are not yet available in your language."
     ],
     "footer": "Minecraft World Wiki · The free encyclopedia of a parallel world",
     "categories": {
@@ -81,6 +85,72 @@
       "蘑法村": "Mashic Town",
       "阿貓村": "Amao",
       "聯合政府": "United Government"
+    }
+  },
+  "tora": {
+    "site_title": "Ṁǎįṅķřæƒŧ Ṽǎřőł Ṽįķį",
+    "short_tagline": "Ʒǎṅňɛşłįƀ łįƀėř",
+    "tagline": "Ṁǎįṅķřæƒŧřő ṽǎřőłřő ʒǎṅňɛşłįƀ",
+    "map_caption": "Ṽǎřőłṁǎƥ ʒɛ ňǎřįṅǎřő ŧėřįŧṅǎ (ėłďɔṅ 2026/08/30). ",
+    "did_you_know": [
+      "[[神武鐵路|Ĵįṅṁů Řɛł]] ṁǎƥğǎ ŧœł ṁůłŧė şŧæçįṅǎ ʒɛ ňǎřįṅǎŧǎ ħǎŧ ķą?",
+      "Ǎřĵɛṅʃįř Ķɔṅŧįṅʃė ŧął [[探索者線|Ŷǎṽəłʒɔř Łįṅį]] ğő ķą?",
+      "Ŧėħǎřő ṽǎřőłğǎ ŧął [[卡諾共和國|Ķǎṅǎł Řəşƥůƀ]] ṁʊř ķőṁƥłɛŧŧǎ ħǎŧ ķą?",
+      "Řǎƀłʊ ňőƒǎʃ ʒɛ ṽįř ķǎř ʃɛďő, ʃőł ʃǎřṅǎ [[-30高速鐵路|-30 Ŧėłřɛł]]řő ğɔʒłʊŧǎ ħǎłŧįďő ķą?"
+    ],
+    "about": [
+      "Ṁǎįṅķřæƒŧ Ṽǎřőł Ṽįķį ʒǎṅňɛşłįƀ ʃɛ. Ħį Ṁǎįṅķřæƒŧřő ṽǎřőłřő ňǎřįṅǎ, ğřǎďʃįłṅǎ, ŧřǎṅşƥőřłʊ, øřğæṅłʊṅǎ, řėłįğṅǎ ʒɛ ħįşŧœřŧǎ ğřǎƒ.",
+      "Ṽǎřőłřő ğřǎƒʒɔř ğřǎƒŧɔłṅǎŧǎ ğřǎƒ ʒɛ řėçėṅ, ǎŷɛ ħį ħįṅǎŧǎ ƥʊƀłįķ. Ƀłů ķøṅėķłʊ ğřǎƒŧɔłʃė ğő; ŧė ğřǎƒŧɔł ŷǎṁ ƥʊƀłįķŷėķė. Řǎʃ ğřǎƒŧɔł ŷǎṁ ğřǎƒŷėķė, ǎŷɛ ħį ðǎʃ ňő ƥʊƀłįķŷė.",
+      "Ŧė Ṽįķį Ĵůŋṽėṅğǎ, Ėŋłįʃğǎ ʒɛ Ŧőřǎğǎ ɛķżįş. Ƥæĵřő ʒůƥğǎ «Ṽǎłįẍ» ṁėňůƀő ṽǎłįẍŧǎ ʃǎňĵįħő. Ŧőřǎğǎ ğřǎƒŧɔłṅǎ Ĵůŋṽėṅðɛ ŧřǎðůķŷėďő. «zh» ķøṅėķłʊ Ĵůŋṽėṅğǎ ğřǎƒŧɔłʃė ğő."
+    ],
+    "footer": "Ṁǎįṅķřæƒŧ Ṽǎřőł Ṽįķį · Ʒǎṅňɛşłįƀ łįƀėř",
+    "categories": {
+      "國家與地區": "Ňǎřįṅǎ ʒɛ řɛğįṅṅǎ",
+      "世界總覽": "Ṽǎřőłřő řəşůṁ",
+      "國際組織": "Ṽǎřőł øřğæṅłʊṅǎ",
+      "人物": "Ʃǎřṅǎ",
+      "交通": "Ŧřǎṅşƥőřłʊ",
+      "宗教": "Řėłįğ",
+      "歷史": "Ħįşŧœř",
+      "典籍": "Łįƀṅǎ",
+      "決議": "Řėʒőłłʊṅǎ",
+      "希拉加大陸": "Ħįłǎğǎ Ķɔṅŧįṅ",
+      "法羅西多爾半島": "Ƒǎřőşėďőř Ďůṅįň",
+      "伊絲拉洋": "Įşłǎş Ňæłĵɔṁ",
+      "阿斯塔蒂大陸": "Ǎşŧǎřŧė Ķɔṅŧįṅ",
+      "渥斯特大陸": "Ṽůşŧė Ķɔṅŧįṅ",
+      "布蘭克沿岸": "Ƀłǎṅķő Ňæłƒłǎŋ",
+      "銀白大陸": "Ǎřĵɛṅʃįř Ķɔṅŧįṅ",
+      "阿斯塔蒂聯邦共和國": "Ǎşŧǎřŧė Ƒɛďɛřřəşƥůƀ",
+      "法羅西多爾聯邦": "Ƒǎřőşėďőř Ƒɛďɛř",
+      "尼西亞": "Ṅįşįǎ",
+      "埃里米亞尼西亞聯邦": "Ėřįṁįǎṅėşįǎ Ƒɛďɛř",
+      "萬日鎮共和國": "Ṁįřįď Ďįł Ğřǎďʃįł Řəşƥůƀ",
+      "歐西尼西亞共和國": "Őǎşįṅėşįǎ Řəşƥůƀ",
+      "北島": "Ṅɔřďɔŧįřǎ",
+      "雷哈根國": "Řǎįħǎğėṅ Ŧǎŧ",
+      "薩圖曼國": "Şǎŧůřṁǎṅ Ŧǎŧ",
+      "卡諾共和國": "Ķǎṅǎł Řəşƥůƀ",
+      "布魯哈共和國": "Ƀřůħǎ Řəşƥůƀ",
+      "阿帕提共和國": "Ǎƥǎŧį Řəşƥůƀ",
+      "阿比諾": "Ǎłƥįṅő",
+      "流光鎮": "Ƒłʊłįʃ Ğřǎďʃįł",
+      "伏流鎮": "Şʊƀƒłʊ Ğřǎďʃįł",
+      "埃爾加蒂斯": "Ėřğǎŧįş",
+      "姆尼梅亞": "Ṁṅįṁėįǎ",
+      "安丘瑪": "Ǎṅčůṁǎ",
+      "懷斯特": "Ķṽėşŧ",
+      "日日新村": "Ďįłďįłňɛṽ Ṽįł",
+      "星泉湖": "Ŧőřƒɔňŧő Łɔṁ",
+      "梅多布魯克": "Ṁɛďőƀřůķ",
+      "沃諾": "Ṽůṅő",
+      "法塔": "Ƒǎþǎ",
+      "科拉達": "Ķőįłǎďǎ",
+      "科諾鎮": "Ķėřṅėł Ğřǎďʃįł",
+      "索羅托": "Żőłőŧő",
+      "蘑法村": "Ƒůŋṁǎğį Ṽįł",
+      "阿貓村": "Ǎṁǎů Ṽįł",
+      "聯合政府": "Ůṅįřėğþǎř"
     }
   }
 }

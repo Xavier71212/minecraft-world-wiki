@@ -1,4 +1,9 @@
 /* Minecraft World Wiki — 百科風設計系統（tokens 與設計系統 tokens.json 一致） */
+/* 托拉語字母（39 個字母的大小寫）：DejaVu 字型的子集，只套用在這些字母上，不影響中文與英文 */
+@font-face { font-family: "Tora Sans"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/ToraSans-400.woff") format("woff"); unicode-range: U+00C6-00C7,U+00D0,U+00D8,U+00DE,U+00E6-00E7,U+00F0,U+00F8,U+00FE,U+0104-0105,U+010C-010F,U+0116-0117,U+011E-011F,U+0126-0127,U+012E-012F,U+0134-0137,U+0141-0142,U+0147-0148,U+014A-014B,U+0150-0153,U+0158-0159,U+015E-015F,U+0166-0167,U+016E-016F,U+0176-0177,U+017B-017C,U+0180,U+0186,U+018F-0192,U+01A4-01A5,U+01A9,U+01B1,U+01B7,U+01CD-01CE,U+0243,U+0254,U+0259,U+025B,U+0283,U+028A,U+0292,U+1E40-1E41,U+1E44-1E45,U+1E7C-1E7D,U+1E8C-1E8D; }
+@font-face { font-family: "Tora Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/ToraSans-700.woff") format("woff"); unicode-range: U+00C6-00C7,U+00D0,U+00D8,U+00DE,U+00E6-00E7,U+00F0,U+00F8,U+00FE,U+0104-0105,U+010C-010F,U+0116-0117,U+011E-011F,U+0126-0127,U+012E-012F,U+0134-0137,U+0141-0142,U+0147-0148,U+014A-014B,U+0150-0153,U+0158-0159,U+015E-015F,U+0166-0167,U+016E-016F,U+0176-0177,U+017B-017C,U+0180,U+0186,U+018F-0192,U+01A4-01A5,U+01A9,U+01B1,U+01B7,U+01CD-01CE,U+0243,U+0254,U+0259,U+025B,U+0283,U+028A,U+0292,U+1E40-1E41,U+1E44-1E45,U+1E7C-1E7D,U+1E8C-1E8D; }
+@font-face { font-family: "Tora Serif"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/ToraSerif-400.woff") format("woff"); unicode-range: U+00C6-00C7,U+00D0,U+00D8,U+00DE,U+00E6-00E7,U+00F0,U+00F8,U+00FE,U+0104-0105,U+010C-010F,U+0116-0117,U+011E-011F,U+0126-0127,U+012E-012F,U+0134-0137,U+0141-0142,U+0147-0148,U+014A-014B,U+0150-0153,U+0158-0159,U+015E-015F,U+0166-0167,U+016E-016F,U+0176-0177,U+017B-017C,U+0180,U+0186,U+018F-0192,U+01A4-01A5,U+01A9,U+01B1,U+01B7,U+01CD-01CE,U+0243,U+0254,U+0259,U+025B,U+0283,U+028A,U+0292,U+1E40-1E41,U+1E44-1E45,U+1E7C-1E7D,U+1E8C-1E8D; }
+@font-face { font-family: "Tora Serif"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/ToraSerif-700.woff") format("woff"); unicode-range: U+00C6-00C7,U+00D0,U+00D8,U+00DE,U+00E6-00E7,U+00F0,U+00F8,U+00FE,U+0104-0105,U+010C-010F,U+0116-0117,U+011E-011F,U+0126-0127,U+012E-012F,U+0134-0137,U+0141-0142,U+0147-0148,U+014A-014B,U+0150-0153,U+0158-0159,U+015E-015F,U+0166-0167,U+016E-016F,U+0176-0177,U+017B-017C,U+0180,U+0186,U+018F-0192,U+01A4-01A5,U+01A9,U+01B1,U+01B7,U+01CD-01CE,U+0243,U+0254,U+0259,U+025B,U+0283,U+028A,U+0292,U+1E40-1E41,U+1E44-1E45,U+1E7C-1E7D,U+1E8C-1E8D; }
 :root {
   --page: #F6F6F6; --surface: #FFFFFF; --surface-alt: #F8F9FA;
   --ink: #202122; --ink-muted: #54595D;
@@ -6,8 +11,8 @@
   --link: #3366CC; --link-hover: #1F4A99; --link-unpublished: #BA0000; --focus: #3366CC;
   --portal-intro-border: #A7D7F9; --head-featured: #EAF3FF; --head-didyouknow: #EFF8EA;
   --cat-region: #D6E4F5; --cat-transport: #D4EDE4; --cat-org: #F3E6C6; --cat-religion: #E6D8EF; --cat-history: #EADFD2;
-  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  --font-sans: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+  --font-serif: "Tora Serif", "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-sans: "Tora Sans", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {

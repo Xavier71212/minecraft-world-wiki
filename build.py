@@ -5,8 +5,8 @@
 - 子資料夾 = 分類，會自動產生分類頁。
 - 條目裡的超連結依目標狀態上色：已發布 → 藍色連結；已有條目但未發布（列在 entries.txt）→ 紅字；其他 → 一般文字。
 - 文件中的圖片（旗幟、標誌、路線圖）會自動取出。
-- 雙語：繁體中文在網站根目錄，英文在 en/。英文條目來自 content-en/（本機「English」資料夾的鏡像），
-  與 content/ 相同的路徑與檔名；每一頁右上角都有維基百科式的語言選單。
+- 多語言：繁體中文在網站根目錄，英文在 en/，托拉語在 tora/。各語言的條目來自 content-en/、content-tora/
+  （本機「English」「托拉語」資料夾的鏡像），與 content/ 相同的路徑與檔名；每一頁右上角都有維基百科式的語言選單。
 """
 import hashlib
 import html
@@ -25,17 +25,18 @@ from docx.text.paragraph import Paragraph
 
 ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
-CONTENT_EN = ROOT / "content-en"
+LANG_CONTENT = {"en": ROOT / "content-en", "tora": ROOT / "content-tora"}  # 各語言條目資料夾
 STATIC = ROOT / "static"
 OUT = ROOT / "_site"
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 
 E = html.escape
 
-LANGS = ("zh", "en")
-LANG_ATTR = {"zh": "zh-Hant", "en": "en"}
-LANG_NAME = {"zh": "繁體中文", "en": "English"}
-PREFIX = {"zh": "", "en": "en/"}
+LANGS = ("zh", "en", "tora")
+LANG_ATTR = {"zh": "zh-Hant", "en": "en", "tora": "art-x-tora"}
+LANG_NAME = {"zh": "繁體中文", "en": "English", "tora": "Ŧőřǎ"}
+PREFIX = {"zh": "", "en": "en/", "tora": "tora/"}
+WORDY = ("en", "tora")  # 以空格分詞的語言（網址用底線、摘要依字詞截斷）
 
 UI = {
     "zh": {
@@ -76,6 +77,27 @@ UI = {
         "stale_link": "Read the latest Chinese version",
         "zh_name": "Chinese",
     },
+    # 托拉語（Ŧőřǎ）：依《托拉語文法手冊》與詞典翻譯，句型經托拉語翻譯器驗證
+    "tora": {
+        "skip": "Ėṅħǎṽŧɔłʃė ğőħő", "search_label": "Ğřǎƒŧɔłṅǎŧǎ ʃœķħő", "search_ph": "Ňǎřįṅǎ, ğřǎďʃįłṅǎ, ɛṽėṅṅǎ…", "search_btn": "Ʃœķħő",
+        "tools": "Ƒǎłṅǎ", "random": "Ʃǎṅğřǎƒŧɔł", "recent": "Ʃǎňĵįłʊ łǎşŧǎŧṅǎ", "about": "Įňŧėřƥæĵřő ƥřįṁğǎ",
+        "nav": "Ṽįðįłʊ", "home": "Ƥæĵ ʃėƒŧįş", "regions_group": "Ķɔṅŧįṅṅǎ ʒɛ ňæłĵɔṁṅǎ", "toc": "Ėṅħǎṽŧɔł", "top": "(Ʒůƥ)",
+        "cat": "Ķǎŧėğṅǎ: ", "sep": " | ", "updated": "Ĵįşďǎŧłʊ łæş: {d}.", "crumbs": "Łɔķæłğőŋ",
+        "main_entry": "Ğřǎƒŧɔł ʃėƒŧįş: ", "subcats": "Şʊƀķǎŧėğṅǎ", "in_cat": "Ŧė ķǎŧėğğǎ ğřǎƒŧɔłṅǎ ({n})",
+        "cat_empty": "Ŧė ķǎŧėğğǎ Ŧőřǎğǎ ňœł ğřǎƒŧɔł ðǎʃ ʃɛ.",
+        "welcome": "{s}ʃė ƀǎłṽɛṅ!", "count": "Ŧőřǎğǎ ğřǎƒŧɔłṅǎ: <b>{n}</b>", "map_click": "Ṁǎƥŧǎ ʊƥħő.",
+        "map_alt": "Ṽǎřőłṁǎƥ ňǎřįṅǎŧǎ ṽįďẍɛ", "featured": "Ğřǎƒŧɔł ƀǎłĵɔṁ", "dyk": "Ƀą ʒǎṅ ķą?", "dyk_lead": "… ",
+        "regions": "Ňǎřįṅǎ ʒɛ řɛğįṅṅǎ", "read_more": " (Ğřǎƒŧɔł ƒʊłŧǎ łɛʒħő…)", "feat_empty": "Ŷőʃʊ ğřǎƒŧɔłṅǎ ƀąłðæṽ ṽɛṅṽǎ.",
+        "dyk_empty": "Ħįṅǎ ƀąłðæṽ ṽɛṅṽǎ.", "recent_empty": "Ňœł ğřǎƒŧɔł ʃɛ.",
+        "search_title": "Ʃœķłʊ", "search_h": "Ʃœķłʊřɛżʊłṅǎ", "searching": "Ʒőṅǎ ʃœķçǎ…",
+        "random_going": "Ʒőṅǎ ğřǎƒŧɔłʃė ʃǎṅƀő ƀąŧǎ ŧǎķçǎ…",
+        "nf_title": "Ƥæĵ ňő ƒąṅŷėďő", "nf_h": "Ƥæĵ ňő ƒąṅŷėďő", "nf_body": "Ŧė ğřǎƒŧɔł ðǎʃ ƀłėŷǎ ňő ƥʊƀłįķŷė. Ǎďřėş ňőĵůş ƀłėŷǎ ʃɛ. Ʃœķłʊŧǎ ƥřøṽħő.",
+        "unpub": "Ŧė ğřǎƒŧɔł ðǎʃ ňő ƥʊƀłįķŷė", "lang": "Ṽǎłįẍ", "lang_menu": "Ṽǎłįẍŧǎ ʃǎňĵįħő", "no_version": "Ŧė ṽǎłįẍğǎ ðǎʃ ňő ɛķżįş",
+        "see_also": "Ŧǎŋ ṽįďħő", "colon": ": ",
+        "ill": "Ŧė ğřǎƒŧɔł Ŧőřǎğǎ ðǎʃ ňő ɛķżįş. Ķøṅėķłʊ Ĵůŋṽėṅğǎ ğřǎƒŧɔłŧǎ ʊƥ.",
+        "stale": "Ŧė ŧřǎðůķłʊ Ĵůŋṽėṅğǎ ğřǎƒŧɔłřő ėłďɔṅ ŷœʃðɛ ṽɛṅ. ",
+        "stale_link": "Ĵůŋṽėṅğǎ ėłďɔṅ ŧœł ňɛṽŧǎ łɛʒħő",
+    },
 }
 
 CATEGORY_CLASS = {
@@ -90,7 +112,7 @@ CATEGORY_CLASS = {
 }
 
 BULLET_RE = re.compile(r"^\s*[•●・‧▪◦]\s*")
-SEE_ALSO = ("參見", "See also")
+SEE_ALSO = ("參見", "See also", "Ŧǎŋ ṽįďħő")
 
 ENT = {}  # 中文條目名稱 -> 資訊（main() 中設定）
 
@@ -102,8 +124,8 @@ def slug(name):
 
 
 def slug_l(name, lang):
-    """英文網址用底線取代空格（維基百科式，例如 Yerik_Levitch）；中文網址維持原樣。"""
-    return slug(name).replace(" ", "_") if lang == "en" else slug(name)
+    """英文、托拉語網址用底線取代空格（維基百科式，例如 Yerik_Levitch）；中文網址維持原樣。"""
+    return slug(name).replace(" ", "_") if lang in WORDY else slug(name)
 
 
 def url_quote(path):
@@ -111,22 +133,28 @@ def url_quote(path):
 
 
 def cfg(lang, key, default=None):
-    if lang == "en":
-        v = CONFIG.get("en", {}).get(key)
+    if lang != "zh":
+        v = CONFIG.get(lang, {}).get(key)
         if v is not None:
             return v
     return CONFIG.get(key, default)
+
+
+def tr(stem, lang):
+    """條目在該語言的版本資訊；中文回傳條目本身，沒有翻譯時回傳 None。"""
+    info = ENT[stem]
+    return info if lang == "zh" else info["tr"].get(lang)
 
 
 def cat_name(c, lang):
     """分類（資料夾）名稱在該語言的顯示名稱。"""
     if lang == "zh":
         return c
-    m = CONFIG.get("en", {}).get("categories", {})
+    m = CONFIG.get(lang, {}).get("categories", {})
     if c in m:
         return m[c]
-    if c in ENT and ENT[c].get("en"):
-        return ENT[c]["en"]["title"]
+    if c in ENT and tr(c, lang):
+        return tr(c, lang)["title"]
     return c
 
 
@@ -154,36 +182,40 @@ def collect():
             "url": f"wiki/{url_quote(slug(stem))}.html",
             "out": f"wiki/{slug(stem)}.html",
         }
-    # 英文版：content-en/ 中與中文條目相同路徑的檔案
-    used = set()
-    for stem, info in entries.items():
-        ef = CONTENT_EN / info["rel"]
-        if not ef.exists():
-            continue
-        try:
-            d = Document(str(ef))
-        except Exception as e:
-            print(f"無法讀取英文條目 {ef.name}：{e}", file=sys.stderr)
-            continue
-        title = (d.core_properties.title or "").strip()
-        if not title:
-            for p in d.paragraphs:
-                if p.style is not None and p.style.name.lower() in ("title", "標題") and p.text.strip():
-                    title = p.text.strip()
-                    break
-        title = title or stem
-        if title in used:
-            title = f"{title} ({stem})"
-        used.add(title)
-        m = re.search(r"source-sha1:([0-9a-f]{40})", d.core_properties.comments or "")
-        info["en"] = {
-            "file": ef,
-            "title": title,
-            "rel": f"wiki/{url_quote(slug_l(title, 'en'))}.html",
-            "url": f"en/wiki/{url_quote(slug_l(title, 'en'))}.html",
-            "out": f"en/wiki/{slug_l(title, 'en')}.html",
-            "stale": bool(m) and m.group(1) != sha1(info["file"]),
-        }
+    # 其他語言版本：content-en/、content-tora/ 中與中文條目相同路徑的檔案
+    for info in entries.values():
+        info["tr"] = {}
+    for lang, folder in LANG_CONTENT.items():
+        used = set()
+        for stem, info in entries.items():
+            ef = folder / info["rel"]
+            if not ef.exists():
+                continue
+            try:
+                d = Document(str(ef))
+            except Exception as e:
+                print(f"無法讀取{lang}條目 {ef.name}：{e}", file=sys.stderr)
+                continue
+            title = (d.core_properties.title or "").strip()
+            if not title:
+                for p in d.paragraphs:
+                    if p.style is not None and p.style.name.lower() in ("title", "標題") and p.text.strip():
+                        title = p.text.strip()
+                        break
+            title = title or stem
+            if title in used:
+                title = f"{title} ({stem})"
+            used.add(title)
+            m = re.search(r"source-sha1:([0-9a-f]{40})", d.core_properties.comments or "")
+            s = url_quote(slug_l(title, lang))
+            info["tr"][lang] = {
+                "file": ef,
+                "title": title,
+                "rel": f"wiki/{s}.html",
+                "url": f"{PREFIX[lang]}wiki/{s}.html",
+                "out": f"{PREFIX[lang]}wiki/{slug_l(title, lang)}.html",
+                "stale": bool(m) and m.group(1) != sha1(info["file"]),
+            }
     existing = set()
     ex_file = ROOT / "entries.txt"
     if ex_file.exists():
@@ -196,7 +228,7 @@ def git_dates():
     dates = {}
     try:
         out = subprocess.run(
-            ["git", "log", "--name-only", "--format=@@%cI", "--", "content", "content-en"],
+            ["git", "log", "--name-only", "--format=@@%cI", "--", "content", *[p.name for p in LANG_CONTENT.values()]],
             cwd=ROOT, capture_output=True, text=True, check=True,
             env={**os.environ, "GIT_CONFIG_PARAMETERS": "'core.quotepath=false'"},
         ).stdout
@@ -212,16 +244,21 @@ def git_dates():
 
 
 def entry_url(stem, lang):
-    """條目在該語言的網址（相對網站根目錄）；英文版沒有翻譯時回傳 None。"""
-    info = ENT[stem]
-    if lang == "en":
-        return info["en"]["url"] if info.get("en") else None
-    return info["url"]
+    """條目在該語言的網址（相對網站根目錄）；該語言沒有翻譯時回傳 None。"""
+    t = tr(stem, lang)
+    return t["url"] if t else None
 
 
 def entry_title(stem, lang):
-    info = ENT[stem]
-    return info["en"]["title"] if lang == "en" and info.get("en") else stem
+    if lang == "zh":
+        return stem
+    t = tr(stem, lang)
+    return t["title"] if t else stem
+
+
+def alts(stem):
+    """條目在各語言的網址（語言選單用）。"""
+    return {l: entry_url(stem, l) for l in LANGS}
 
 
 # ---------------------------------------------------------------- docx 轉 HTML
@@ -269,9 +306,9 @@ class Converter:
         url = entry_url(stem, self.lang)
         if url:
             return f'<a href="{base}{url}">{inner}</a>'
-        # 英文頁面：目標條目還沒有英文版 → 連到中文條目並標示 zh
+        # 英文、托拉語頁面：目標條目還沒有這個語言的版本 → 連到中文條目並標示 zh
         return (f'<a class="ill" href="{base}{self.entries[stem]["url"]}" hreflang="zh-Hant" title="{E(u["ill"])}">{inner}</a>'
-                f'<sup class="ill-tag" lang="en">zh</sup>')
+                f'<sup class="ill-tag">zh</sup>')
 
     def runs_html(self, el, part, base, imgs):
         out = []
@@ -396,7 +433,7 @@ def lang_menu(lang, alt, base):
         elif alt.get(l):
             items.append(f'<li><a href="{base}{alt[l]}" lang="{la}" hreflang="{la}">{name}</a></li>')
         else:
-            items.append(f'<li><span class="na" lang="{la}">{name}<small lang="{LANG_ATTR[lang]}">{E(u["no_version"])}</small></span></li>')
+            items.append(f'<li><span class="na"><span lang="{la}">{name}</span><small>{E(u["no_version"])}</small></span></li>')
     return (
         f'<details class="langsw"><summary title="{E(u["lang_menu"])}">'
         f'<svg class="langicon" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20 18h-1.44a.6.6 0 0 1-.4-.12.8.8 0 0 1-.23-.31L17 15h-5l-1 2.54a.8.8 0 0 1-.22.3.6.6 0 0 1-.4.14H9l4.55-11.47h1.89zm-3.53-4.31L14.89 9.5a12 12 0 0 1-.39-1.24q-.09.37-.19.69l-.19.56-1.58 4.19zm-6.3-1.58a13.4 13.4 0 0 1-2.91-1.41 11.46 11.46 0 0 0 2.81-5.37H12V4H7.31a4 4 0 0 0-.2-.56C6.87 2.79 6.6 2 6.6 2l-1.47.5s.4.89.6 1.5H0v1.33h2.15A11.23 11.23 0 0 0 5 10.7a17.2 17.2 0 0 1-5 2.1q.56.82.87 1.38a23.3 23.3 0 0 0 5.22-2.51 15.6 15.6 0 0 0 3.56 1.77zM3.63 5.33h4.91a8.1 8.1 0 0 1-2.45 4.45 9.1 9.1 0 0 1-2.46-4.45"/></svg>'
@@ -412,6 +449,7 @@ def page(title, body, base, *, lang="zh", alt=None, sidebar="", description="", 
     full = site if title == site else f"{title} - {site}"
     lr = base + PREFIX[lang]  # 該語言版本的根目錄
     site_url = CONFIG.get("site_url", "").rstrip("/") + "/"
+    preload = f'<link rel="preload" href="{base}static/fonts/ToraSans-400.woff" as="font" type="font/woff" crossorigin>' if lang == "tora" else ""
     alternates = "".join(
         f'<link rel="alternate" hreflang="{LANG_ATTR[l]}" href="{E(site_url + alt[l])}">' for l in LANGS if alt.get(l)
     )
@@ -426,6 +464,7 @@ def page(title, body, base, *, lang="zh", alt=None, sidebar="", description="", 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+{preload}
 <link rel="stylesheet" href="{base}static/style.css">
 <link rel="icon" href="{base}static/favicon.svg" type="image/svg+xml">
 </head>
@@ -500,7 +539,7 @@ def build_tree(entries):
 
 
 def visible(stem, lang):
-    return lang == "zh" or bool(ENT[stem].get("en"))
+    return bool(tr(stem, lang))
 
 
 def count_entries(node, lang="zh"):
@@ -568,7 +607,7 @@ def render_infobox(rows, title, cats, base, lang="zh", subtitle=""):
             for k, n in enumerate(imgs):
                 lab = labels[k] if k < len(labels) else ""
                 figs.append(
-                    f'<figure><img src="{base}media/{n}" alt="{E(cap + " " + lab if lang == "en" else cap + lab)}"><figcaption>{E(lab)}</figcaption></figure>'
+                    f'<figure><img src="{base}media/{n}" alt="{E(cap + " " + lab if lang in WORDY else cap + lab)}"><figcaption>{E(lab)}</figcaption></figure>'
                 )
             trs.append(f'<tr><td colspan="2" class="ib-img"><div class="ib-figs">{"".join(figs)}</div></td></tr>')
         elif len(r) >= 2:
@@ -578,7 +617,7 @@ def render_infobox(rows, title, cats, base, lang="zh", subtitle=""):
             trs.append(f'<tr><th scope="row">{k["html"]}</th><td>{v["html"]}</td></tr>')
         elif len(r) == 1 and r[0]["text"]:
             trs.append(f'<tr><th colspan="2" class="ib-sub">{r[0]["html"]}</th></tr>')
-    sub_lang = ' lang="zh-Hant"' if lang == "en" else ""
+    sub_lang = ' lang="zh-Hant"' if lang != "zh" else ""
     sub = f"<span{sub_lang}>{E(sub_text)}</span>" if sub_text and sub_text != cap else ""
     return (
         f'<table class="infobox"><caption class="{cat_class(cats)}">{E(cap)}{sub}</caption>'
@@ -592,7 +631,7 @@ def first_text(blocks, limit=120, lang="zh"):
             t = re.sub("<[^>]+>", "", d)
             t = html.unescape(t).strip()
             if t:
-                if lang == "en":
+                if lang in WORDY:
                     limit *= 2
                     return t if len(t) <= limit else t[:limit].rsplit(" ", 1)[0].rstrip(",;:") + "…"
                 return t if len(t) <= limit else t[:limit].rstrip() + "……"
@@ -615,8 +654,8 @@ def write(rel, text):
 
 
 def both(path):
-    """非條目頁面（首頁、分類、搜尋等）在兩種語言都存在。"""
-    return {"zh": path, "en": "en/" + path}
+    """非條目頁面（首頁、分類、搜尋等）在每種語言都存在。"""
+    return {l: PREFIX[l] + path for l in LANGS}
 
 
 # ---------------------------------------------------------------- 單一語言版本
@@ -624,28 +663,28 @@ def both(path):
 def build_lang(lang, entries, existing, tree, dates):
     u = UI[lang]
     conv = Converter(entries, existing, OUT / "media", lang)
-    depth0 = 1 if lang == "en" else 0  # en/ 多一層
+    depth0 = 1 if PREFIX[lang] else 0  # en/、tora/ 多一層
     index = []
     root = "../" * depth0  # 該語言首頁相對網站根目录
 
     # 條目頁
     for stem, info in entries.items():
-        if lang == "en" and not info.get("en"):
+        loc = tr(stem, lang)
+        if not loc:
             continue
         base = "../" * (depth0 + 1)
-        src = info["en"]["file"] if lang == "en" else info["file"]
+        src = loc["file"]
         title = entry_title(stem, lang)
         try:
             blocks, infobox = conv.convert(src, base)
         except Exception as e:
             print(f"無法轉換 {src.name}：{e}", file=sys.stderr)
             continue
-        loc = info["en"] if lang == "en" else info
         loc["summary"] = first_text(blocks, lang=lang)
         rel = src.relative_to(ROOT).as_posix()
         loc["updated"] = dates.get(rel, "")
         body_html, toc = render_blocks(blocks, base)
-        ib = render_infobox(infobox, title, info["cats"], base, lang, subtitle=stem if lang == "en" else "")
+        ib = render_infobox(infobox, title, info["cats"], base, lang, subtitle=stem if lang != "zh" else "")
         loc["thumb"] = None
         if infobox:
             for r in infobox:
@@ -666,7 +705,7 @@ def build_lang(lang, entries, existing, tree, dates):
         if loc["updated"]:
             upd = f'<p class="updated">{E(u["updated"].format(d=loc["updated"][:10]))}</p>'
         notice = ""
-        if lang == "en" and info["en"].get("stale"):
+        if lang != "zh" and loc.get("stale"):
             notice = f'<p class="hatnote notice">{E(u["stale"])}<a href="{base}{info["url"]}" hreflang="zh-Hant">{E(u["stale_link"])}</a>.</p>'
         crumb_cats = info["cats"][:-1] if info["cats"] and info["cats"][-1] == stem else info["cats"]
         body = (
@@ -674,15 +713,16 @@ def build_lang(lang, entries, existing, tree, dates):
             f'<h1 class="title">{E(title)}</h1>{notice}'
             f'<div class="article-body">{ib}{body_html}</div>{cats_bar}{upd}</article>'
         )
-        alt = {"zh": info["url"], "en": info["en"]["url"] if info.get("en") else None}
+        alt = alts(stem)
         write(loc["out"], page(title, body, base, lang=lang, alt=alt,
                                sidebar=toc_html or nav_sidebar(tree, base, lang), description=loc["summary"]))
-        idx_url = loc["rel"] if lang == "en" else info["url"]
-        index.append({"t": title, "a": stem if lang == "en" else (info["en"]["title"] if info.get("en") else ""),
+        idx_url = loc["rel"] if lang != "zh" else info["url"]
+        others = [entry_title(stem, l) for l in LANGS if l != lang and tr(stem, l)]
+        index.append({"t": title, "a": " / ".join(others),
                       "u": idx_url, "s": loc["summary"], "c": " › ".join(cat_name(c, lang) for c in info["cats"])})
 
     def loc_of(stem):
-        return entries[stem]["en"] if lang == "en" else entries[stem]
+        return tr(stem, lang)
 
     # 分類頁
     def walk(node, cats):
@@ -711,7 +751,7 @@ def build_lang(lang, entries, existing, tree, dates):
                 parts.append(f'<p class="empty">{E(u["cat_empty"])}</p>')
             parts.append("</article>")
             write(cat_out(cats, lang), page(name, "".join(parts), base, lang=lang,
-                                            alt={"zh": cat_url(cats, "zh"), "en": cat_url(cats, "en")},
+                                            alt={l: cat_url(cats, l) for l in LANGS},
                                             sidebar=nav_sidebar(tree, base, lang)))
         for d, n in node["dirs"].items():
             walk(n, cats + [d])
@@ -843,14 +883,19 @@ def main():
     dates = git_dates()
     totals = {lang: build_lang(lang, entries, existing, tree, dates) for lang in LANGS}
 
-    # 404（GitHub Pages 所有語言共用一頁，兩種語言並列）
+    # 404（GitHub Pages 所有語言共用一頁，各語言並列）
     root = "/" + CONFIG.get("base_path", "").strip("/") + "/" if CONFIG.get("base_path") else "/"
-    zh, en = UI["zh"], UI["en"]
-    nf = (f'<article class="article"><h1 class="title">{E(zh["nf_h"])}</h1><p>{E(zh["nf_body"])}</p>'
-          f'<h2 lang="en">{E(en["nf_h"])}</h2><p lang="en">{E(en["nf_body"])} <a href="{root}en/index.html">English main page</a></p></article>')
+    zh = UI["zh"]
+    nf = f'<article class="article"><h1 class="title">{E(zh["nf_h"])}</h1><p>{E(zh["nf_body"])}</p>'
+    for l in LANGS[1:]:
+        ul = UI[l]
+        la = LANG_ATTR[l]
+        nf += (f'<h2 lang="{la}">{E(ul["nf_h"])}</h2><p lang="{la}">{E(ul["nf_body"])} '
+               f'<a href="{root}{PREFIX[l]}index.html">{E(ul["home"])}</a></p>')
+    nf += "</article>"
     write("404.html", page(zh["nf_title"], nf, root, lang="zh", alt=both("index.html"), sidebar=""))
 
-    print(f"完成：中文 {totals['zh']} 個條目、英文 {totals['en']} 個條目，輸出到 {OUT}")
+    print("完成：" + "、".join(f"{LANG_NAME[l]} {totals[l]} 個條目" for l in LANGS) + f"，輸出到 {OUT}")
 
 
 if __name__ == "__main__":

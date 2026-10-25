@@ -1,7 +1,11 @@
 (function () {
   var base = document.body.getAttribute('data-base') || '';
-  var en = (document.documentElement.lang || '').indexOf('en') === 0;
-  var T = en ? {
+  var lang = document.documentElement.lang || '';
+  var T = lang === 'art-x-tora' ? {
+    results: function (q, n) { return '«' + q + '»: ' + n + ' řɛżʊłṅǎ'; },
+    prompt: 'Ʒůƥğǎ ðįʃŧǎ ğřǎƒħő.',
+    none: 'Ňœł ğřǎƒŧɔł ðǎʃ ʃɛ.'
+  } : lang.indexOf('en') === 0 ? {
     results: function (q, n) { return n + (n === 1 ? ' result' : ' results') + ' for “' + q + '”'; },
     prompt: 'Type a search term in the box above.',
     none: 'There are no published articles yet.'
@@ -21,7 +25,7 @@
     if (!q) return [];
     var hits = [];
     list.forEach(function (e) {
-      // t = 本語言標題，a = 另一種語言的標題（中英文名稱都能搜到）
+      // t = 本語言標題，a = 其他語言的標題（以「 / 」分隔；用任何一種語言的名稱都能搜到）
       var t = norm(e.t), a = norm(e.a), s = norm(e.s), c = norm(e.c), score = 0;
       if (t === q || a === q) score = 100; else if (t.indexOf(q) === 0 || a.indexOf(q) === 0) score = 60;
       else if (t.indexOf(q) >= 0 || a.indexOf(q) >= 0) score = 40;
@@ -70,7 +74,7 @@
     if (input) input.value = q;
     load().then(function (list) {
       var k = q.trim();
-      var exact = list.filter(function (e) { return e.t === k || (e.a && e.a === k); })[0];
+      var exact = list.filter(function (e) { return e.t === k || (e.a || '').split(' / ').indexOf(k) >= 0; })[0];
       if (exact) { location.replace(base + exact.u); return; }
       var r = search(q, list);
       document.getElementById('search-status').textContent = q ? T.results(q, r.length) : T.prompt;
