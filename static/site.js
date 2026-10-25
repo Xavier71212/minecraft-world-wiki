@@ -1,5 +1,15 @@
 (function () {
   var base = document.body.getAttribute('data-base') || '';
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var T = en ? {
+    results: function (q, n) { return n + (n === 1 ? ' result' : ' results') + ' for “' + q + '”'; },
+    prompt: 'Type a search term in the box above.',
+    none: 'There are no published articles yet.'
+  } : {
+    results: function (q, n) { return '「' + q + '」共有 ' + n + ' 筆結果'; },
+    prompt: '請在上方輸入關鍵字。',
+    none: '目前還沒有已發布的條目。'
+  };
   var idx = null;
   function load() {
     if (idx) return Promise.resolve(idx);
@@ -11,12 +21,14 @@
     if (!q) return [];
     var hits = [];
     list.forEach(function (e) {
-      var t = norm(e.t), s = norm(e.s), c = norm(e.c), score = 0;
-      if (t === q) score = 100; else if (t.indexOf(q) === 0) score = 60; else if (t.indexOf(q) >= 0) score = 40;
+      // t = 本語言標題，a = 另一種語言的標題（中英文名稱都能搜到）
+      var t = norm(e.t), a = norm(e.a), s = norm(e.s), c = norm(e.c), score = 0;
+      if (t === q || a === q) score = 100; else if (t.indexOf(q) === 0 || a.indexOf(q) === 0) score = 60;
+      else if (t.indexOf(q) >= 0 || a.indexOf(q) >= 0) score = 40;
       else if (c.indexOf(q) >= 0) score = 15; else if (s.indexOf(q) >= 0) score = 10;
       if (score) hits.push({ e: e, score: score });
     });
-    hits.sort(function (a, b) { return b.score - a.score || a.e.t.length - b.e.t.length; });
+    hits.sort(function (x, y) { return y.score - x.score || x.e.t.length - y.e.t.length; });
     return hits.map(function (h) { return h.e; });
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -43,15 +55,25 @@
     document.addEventListener('click', function (ev) { if (!box.contains(ev.target) && ev.target !== input) box.hidden = true; });
   }
 
+  // 語言選單：點選單外面或按 Esc 時關閉
+  var langsw = document.querySelector('.langsw');
+  if (langsw) {
+    document.addEventListener('click', function (ev) { if (langsw.open && !langsw.contains(ev.target)) langsw.open = false; });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && langsw.open) { langsw.open = false; langsw.querySelector('summary').focus(); }
+    });
+  }
+
   // 搜尋結果頁
   if (document.body.classList.contains('search-page')) {
     var q = new URLSearchParams(location.search).get('q') || '';
     if (input) input.value = q;
     load().then(function (list) {
-      var exact = list.filter(function (e) { return e.t === q.trim(); })[0];
+      var k = q.trim();
+      var exact = list.filter(function (e) { return e.t === k || (e.a && e.a === k); })[0];
       if (exact) { location.replace(base + exact.u); return; }
       var r = search(q, list);
-      document.getElementById('search-status').textContent = q ? ('「' + q + '」共有 ' + r.length + ' 筆結果') : '請在上方輸入關鍵字。';
+      document.getElementById('search-status').textContent = q ? T.results(q, r.length) : T.prompt;
       document.getElementById('search-results').innerHTML = r.map(function (e) {
         return '<li><a href="' + base + e.u + '"><b>' + esc(e.t) + '</b></a>' + (e.c ? '<small>' + esc(e.c) + '</small>' : '') + '<div>' + esc(e.s) + '</div></li>';
       }).join('');
@@ -61,7 +83,7 @@
   // 隨機條目
   if (document.body.classList.contains('random-page')) {
     load().then(function (list) {
-      if (!list.length) { document.getElementById('random-status').textContent = '目前還沒有已發布的條目。'; return; }
+      if (!list.length) { document.getElementById('random-status').textContent = T.none; return; }
       location.replace(base + list[Math.floor(Math.random() * list.length)].u);
     });
   }

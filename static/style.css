@@ -131,6 +131,30 @@ article .recent { padding: 0; }
 .ib-figs img { max-width: 120px; max-height: 200px; width: auto; height: auto; border: 1px solid var(--hairline); image-rendering: pixelated; }
 .ib-figs figcaption { font-size: 12px; color: var(--ink-muted); }
 
+/* 語言選單（維基百科式「文A 語言」按鈕，位於內容區右上角） */
+.main { position: relative; }
+.pagetools { position: absolute; top: 12px; right: 16px; z-index: 15; }
+.langsw { position: relative; font-size: 14px; line-height: 1.4; }
+.langsw summary { list-style: none; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 10px; border: 1px solid transparent; border-radius: 2px; color: var(--link); cursor: pointer; user-select: none; background: var(--surface); }
+.langsw summary::-webkit-details-marker { display: none; }
+.langsw summary:hover, .langsw[open] summary { border-color: var(--hairline); background: var(--surface-alt); }
+.langsw summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.langicon { flex: none; }
+.caret { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; margin-left: 2px; }
+.langsw[open] .caret { transform: rotate(180deg); }
+.langlist { position: absolute; right: 0; top: calc(100% + 4px); min-width: 200px; margin: 0; padding: 6px 0; list-style: none; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.langlist a, .langlist span { display: block; padding: 6px 16px; }
+.langlist a { color: var(--link); }
+.langlist a:hover { background: var(--surface-alt); text-decoration: none; }
+.langlist .cur { font-weight: 700; color: var(--ink); }
+.langlist .cur::after { content: "✓"; float: right; color: var(--ink-muted); font-weight: 400; }
+.langlist .na { color: var(--ink-muted); }
+.langlist .na small { display: block; font-size: 12px; }
+.article .crumbs, .article .title { padding-right: 120px; }
+.welcome h1 { padding-inline: 110px; }
+.ill-tag { font-size: 10px; color: var(--ink-muted); margin-left: 1px; }
+.notice { font-style: normal; padding: 8px 12px; border: 1px solid var(--hairline); background: var(--surface-alt); }
+
 /* 搜尋結果 */
 .results { list-style: none; padding: 0 !important; display: flex; flex-direction: column; gap: 14px; }
 .results small { display: block; color: var(--ink-muted); font-size: 12px; }
@@ -143,4 +167,7 @@ article .recent { padding: 0; }
   .infobox { float: none; width: 100%; margin: 0 0 16px; }
   .cols { columns: 1; }
   .regions th { width: 110px; }
+  .pagetools { position: static; display: flex; justify-content: flex-end; margin-bottom: -12px; }
+  .article .crumbs, .article .title { padding-right: 0; }
+  .welcome h1 { padding-inline: 0; }
 }

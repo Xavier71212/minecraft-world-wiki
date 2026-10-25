@@ -9,6 +9,8 @@ $Config = Get-Content $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $WikiDir = [System.IO.Path]::GetFullPath((Join-Path $Repo $Config.wiki_folder))
 $Published = Join-Path $WikiDir $Config.published_subfolder
 $Content = Join-Path $Repo 'content'
+$ContentEn = Join-Path $Repo 'content-en'
+$English = if ($Config.english_subfolder) { Join-Path $WikiDir $Config.english_subfolder } else { $null }
 
 function Say($msg, $color = 'Gray') { Write-Host $msg -ForegroundColor $color }
 
@@ -46,23 +48,33 @@ New-Item -ItemType Directory -Force -Path $Content | Out-Null
 robocopy $Published $Content /MIR /XF '~$*' '.gitkeep' 'desktop.ini' 'Thumbs.db' /XD '_to_delete' /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { Say "同步失敗（robocopy 代碼 $LASTEXITCODE）" 'Red'; exit 1 }
 
+# 2b. 英文版：「English」資料夾 → content-en（與「已發布」相同的子資料夾與檔名）
+if ($English -and (Test-Path $English)) {
+    Say '同步英文版條目……'
+    New-Item -ItemType Directory -Force -Path $ContentEn | Out-Null
+    robocopy $English $ContentEn /MIR /XF '~$*' '.gitkeep' 'desktop.ini' 'Thumbs.db' /XD '_to_delete' /NFL /NDL /NJH /NJS /NP | Out-Null
+    if ($LASTEXITCODE -ge 8) { Say "英文版同步失敗（robocopy 代碼 $LASTEXITCODE）" 'Red'; exit 1 }
+}
+
 # 3. 所有已寫好的條目名稱（未發布的條目在網站上顯示為紅字）
 $names = Get-ChildItem $WikiDir -Recurse -Filter *.docx -File |
-    Where-Object { $_.FullName -notmatch '\\_to_delete\\' -and $_.Name -notlike '~$*' } |
+    Where-Object { $_.FullName -notmatch '\\_to_delete\\' -and $_.Name -notlike '~$*' -and (-not $English -or -not $_.FullName.StartsWith($English)) } |
     ForEach-Object { $_.BaseName.Trim() } | Sort-Object -Unique
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines((Join-Path $Repo 'entries.txt'), [string[]]$names, $utf8)
 
 # 4. 提交變更
-G add -A content entries.txt
-$changes = G -c core.quotepath=false status --porcelain -- content entries.txt
+G add -A content content-en entries.txt
+$changes = G -c core.quotepath=false status --porcelain -- content content-en entries.txt
 if (-not $changes) {
     Say ''
     Say '沒有新增或修改的條目，網站已是最新。' 'Green'
     exit 0
 }
-$list = $changes | Where-Object { $_ -match 'content/' } | ForEach-Object {
-    $s = $_.Substring(0, 2).Trim(); $f = [System.IO.Path]::GetFileNameWithoutExtension($_.Substring(3).Trim('"'))
+$list = $changes | Where-Object { $_ -match 'content(-en)?/' } | ForEach-Object {
+    $s = $_.Substring(0, 2).Trim(); $p = $_.Substring(3).Trim('"')
+    $f = [System.IO.Path]::GetFileNameWithoutExtension($p)
+    if ($p -match 'content-en/') { $f = "$f（英文版）" }
     switch -Regex ($s) { 'A|\?' { "新增 $f" } 'D' { "移除 $f" } default { "修改 $f" } }
 }
 Say ''

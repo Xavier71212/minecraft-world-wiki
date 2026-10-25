@@ -1,5 +1,6 @@
 {
   "site_title": "Minecraft World Wiki",
+  "site_url": "https://xavier71212.github.io/minecraft-world-wiki/",
   "short_tagline": "平行世界的自由百科",
   "tagline": "以 Minecraft 世界為基礎、與現實世界平行的世界觀百科",
   "map_caption": "世界地圖與勢力範圍（2026 年 8 月 30 日版）。",
@@ -13,7 +14,73 @@
   ],
   "about": [
     "Minecraft World Wiki 是一部以 Minecraft 世界為基礎、與現實世界平行的世界觀百科，記錄這個世界的國家、城鎮、交通、組織、宗教與歷史。",
-    "條目由世界觀作者撰寫並審核後發布。藍色連結為已發布的條目；紅色文字表示該條目已經寫好、正在審核中，尚未公開。"
+    "條目由世界觀作者撰寫並審核後發布。藍色連結為已發布的條目；紅色文字表示該條目已經寫好、正在審核中，尚未公開。",
+    "本站提供繁體中文與英文兩種語言，可用每一頁右上角的「語言」選單切換。英文版由中文條目翻譯而來，尚未翻譯的條目在語言選單中會顯示為灰色。"
   ],
-  "footer": "Minecraft World Wiki・平行世界的自由百科"
+  "footer": "Minecraft World Wiki・平行世界的自由百科",
+  "en": {
+    "short_tagline": "The free encyclopedia of a parallel world",
+    "tagline": "An encyclopedia of a world built in Minecraft that runs parallel to our own",
+    "map_caption": "World map and spheres of influence (version of 30 August 2026). ",
+    "did_you_know": [
+      "that the [[神武鐵路|Jinmu Railway]] has more stations and crosses more countries than any other line on the route map?",
+      "that the [[探索者線|Explorer Line]] is the only railway that reaches Srebro?",
+      "that the [[卡諾共和國|Republic of Canal]] is the only city-state in the world today with a complete city wall?",
+      "that construction of the [[-30高速鐵路|-30 High Speed Railway]] was halted because excavation proved too difficult and too expensive?"
+    ],
+    "about": [
+      "Minecraft World Wiki is an encyclopedia of a world built in Minecraft that runs parallel to our own. It records the world's countries, towns, transport, organizations, religions and history.",
+      "Articles are written and reviewed by the world's author before they are published. Blue links lead to published articles; red text marks an article that has been written but is still under review.",
+      "The wiki is available in Traditional Chinese and English. Use the Language menu at the top right of every page to switch. English articles are translated from the Chinese originals; links marked “zh” lead to articles that are not yet available in English."
+    ],
+    "footer": "Minecraft World Wiki · The free encyclopedia of a parallel world",
+    "categories": {
+      "國家與地區": "Countries and regions",
+      "世界總覽": "World overview",
+      "國際組織": "International organizations",
+      "人物": "People",
+      "交通": "Transport",
+      "宗教": "Religion",
+      "歷史": "History",
+      "典籍": "Books",
+      "決議": "Resolutions",
+      "希拉加大陸": "Hilaga",
+      "法羅西多爾半島": "Pharosedor Peninsula",
+      "伊絲拉洋": "Islas Ocean",
+      "阿斯塔蒂大陸": "Astarte",
+      "渥斯特大陸": "Wuste",
+      "布蘭克沿岸": "Blanco Coast",
+      "銀白大陸": "Srebro",
+      "阿斯塔蒂聯邦共和國": "Federal Republic of Astarte",
+      "法羅西多爾聯邦": "Pharosedor Federation",
+      "尼西亞": "Nisia",
+      "埃里米亞尼西亞聯邦": "Federated States of Erimianesia",
+      "萬日鎮共和國": "Republic of Ten Thousand Times Town",
+      "歐西尼西亞共和國": "Republic of Oasinesia",
+      "北島": "North Island",
+      "雷哈根國": "State of Rayhagen",
+      "薩圖曼國": "State of Saturman",
+      "卡諾共和國": "Republic of Canal",
+      "布魯哈共和國": "Republic of Bruja",
+      "阿帕提共和國": "Republic of Apati",
+      "阿比諾": "Alpino",
+      "流光鎮": "Luminous Town",
+      "伏流鎮": "Flow Town",
+      "埃爾加蒂斯": "Ergatis",
+      "姆尼梅亞": "Mnimeia",
+      "安丘瑪": "Anchuma",
+      "懷斯特": "Quest",
+      "日日新村": "Sun New Village",
+      "星泉湖": "Star Spring Lake",
+      "梅多布魯克": "Meadowbrook",
+      "沃諾": "Vouno",
+      "法塔": "Fatha",
+      "科拉達": "Koilada",
+      "科諾鎮": "Kernel",
+      "索羅托": "Zoloto",
+      "蘑法村": "Mashic Town",
+      "阿貓村": "Amao",
+      "聯合政府": "United Government"
+    }
+  }
 }
